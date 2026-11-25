@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070817">
+<meta name="description" content="一场写给所有朋友的星空跨年派对。点击屏幕点亮烟花，许下新年愿望。">
+<title>星际新年 · A New Beginning</title>
+<style>
+:root{
+  --bg:#070817;--cyan:#64f7ff;--pink:#ff4fd8;--gold:#ffd98a;
+  --muted:#a8b3d4;--glass:rgba(12,18,45,.58);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:#f5f7ff;font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+body{overflow-x:hidden}
+button{font:inherit}
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.aurora{position:fixed;inset:-20%;z-index:0;pointer-events:none;opacity:.48;filter:blur(65px);background:
+ radial-gradient(ellipse at 20% 30%,rgba(31,83,190,.25),transparent 38%),
+ radial-gradient(ellipse at 80% 25%,rgba(180,34,171,.2),transparent 34%),
+ radial-gradient(ellipse at 50% 90%,rgba(20,191,202,.13),transparent 38%);
+ animation:aurora 15s ease-in-out infinite alternate}
+@keyframes aurora{to{transform:translate3d(3%,-2%,0) scale(1.08);filter:blur(85px) hue-rotate(28deg)}}
+.grid-overlay{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.12;background-image:linear-gradient(rgba(91,128,255,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(91,128,255,.18) 1px,transparent 1px);background-size:58px 58px;mask-image:linear-gradient(to bottom,transparent 2%,black 70%,transparent)}
+main{position:relative;z-index:1;min-height:100svh;display:flex;align-items:center;justify-content:center;padding:34px 18px 54px}
+.shell{width:min(100%,980px);text-align:center;position:relative}
+.topline{display:flex;align-items:center;justify-content:center;gap:10px;color:#9ba9d5;font-size:11px;letter-spacing:.28em;text-transform:uppercase;margin-bottom:30px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#5dffcf;box-shadow:0 0 14px #5dffcf;animation:pulse 1.4s infinite}
+@keyframes pulse{50%{opacity:.35;transform:scale(.7)}}
+.eyebrow{color:var(--cyan);font-size:clamp(10px,2vw,12px);letter-spacing:.42em;text-transform:uppercase;text-shadow:0 0 16px rgba(100,247,255,.7);margin-bottom:15px}
+h1{font-weight:800;line-height:1.05;letter-spacing:.04em;font-size:clamp(48px,10vw,106px);margin:0;text-shadow:0 0 18px rgba(100,247,255,.22),0 0 48px rgba(255,79,216,.2)}
+h1 .year{display:block;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.86);background:linear-gradient(100deg,#fff 10%,#79faff 42%,#ff82e5 75%,#ffe2a3);background-clip:text;-webkit-background-clip:text;filter:drop-shadow(0 0 22px rgba(100,247,255,.28))}
+.subtitle{color:#b9c2df;font-size:clamp(13px,2.4vw,16px);letter-spacing:.18em;margin:22px 0 34px}
+.countdown{display:flex;justify-content:center;align-items:stretch;gap:clamp(8px,2.3vw,20px);margin:0 auto 28px}
+.timebox{width:clamp(66px,15vw,112px);padding:15px 7px 12px;border:1px solid rgba(119,220,255,.24);border-radius:14px;background:linear-gradient(145deg,rgba(23,36,78,.64),rgba(18,13,45,.5));box-shadow:inset 0 0 22px rgba(80,132,255,.07),0 0 25px rgba(53,130,255,.08);backdrop-filter:blur(12px);position:relative;overflow:hidden}
+.timebox:before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 25%,rgba(255,255,255,.07),transparent 55%);transform:translateX(-120%);animation:shine 5s infinite}
+@keyframes shine{50%,100%{transform:translateX(130%)}}
+.num{font-variant-numeric:tabular-nums;font-size:clamp(27px,6vw,48px);font-weight:700;line-height:1.1;color:#fff;text-shadow:0 0 18px rgba(100,247,255,.45)}
+.unit{font-size:10px;letter-spacing:.2em;color:#91a5d8;margin-top:8px}
+.count-label{font-size:11px;color:#8e9bbd;letter-spacing:.16em;margin-bottom:14px}
+.status{min-height:25px;color:#d7dcf5;font-size:13px;letter-spacing:.08em;margin-bottom:23px}
+.actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.btn{border:1px solid rgba(112,231,255,.48);border-radius:999px;padding:13px 23px;color:#eafcff;background:rgba(20,37,75,.5);cursor:pointer;letter-spacing:.08em;font-size:13px;transition:.25s;box-shadow:0 0 22px rgba(73,207,255,.08);backdrop-filter:blur(10px)}
+.btn:hover{transform:translateY(-3px);border-color:var(--cyan);box-shadow:0 0 28px rgba(100,247,255,.23)}
+.btn.primary{color:#08101f;background:linear-gradient(100deg,#8dfaff,#c3a9ff 55%,#ff9be8);border:0;font-weight:750}
+.btn.primary:hover{filter:brightness(1.12)}
+.hint{color:#7483ad;font-size:11px;letter-spacing:.12em;margin-top:24px}
+.footer{position:relative;z-index:1;text-align:center;color:#657397;font-size:10px;letter-spacing:.2em;padding:0 12px 22px}
+.corner{position:fixed;z-index:2;top:18px;right:18px}
+.icon-btn{width:42px;height:42px;border:1px solid rgba(129,177,255,.28);border-radius:50%;background:rgba(12,18,45,.65);color:#dffaff;cursor:pointer;font-size:17px;backdrop-filter:blur(10px)}
+.icon-btn:hover{box-shadow:0 0 20px rgba(100,247,255,.25)}
+.modal{position:fixed;inset:0;z-index:5;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(2,4,18,.72);backdrop-filter:blur(12px)}
+.modal.show{display:flex;animation:fadein .25s ease}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.panel{width:min(100%,460px);border:1px solid rgba(115,229,255,.35);border-radius:22px;padding:28px;background:linear-gradient(145deg,rgba(15,28,65,.96),rgba(26,13,52,.96));box-shadow:0 0 70px rgba(74,116,255,.18);text-align:left;position:relative}
+.panel h2{font-size:24px;margin:0 0 8px}
+.panel p{font-size:13px;color:#aab8dc;line-height:1.7;margin:0 0 18px}
+.close{position:absolute;right:17px;top:15px;border:0;background:none;color:#b9c9ed;font-size:23px;cursor:pointer}
+textarea{width:100%;min-height:118px;resize:vertical;border:1px solid rgba(125,187,255,.28);border-radius:13px;background:rgba(3,9,29,.65);padding:14px;color:white;outline:none;font:14px/1.7 inherit}
+textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(100,247,255,.08)}
+.panel .btn{margin-top:14px;width:100%}
+.wish-result{display:none;text-align:center;padding:14px 4px 4px}
+.wish-result strong{display:block;color:#ffe4a8;font-size:22px;margin:12px 0}
+.wish-result span{display:block;color:#bdc8e6;font-size:13px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
+.toast{position:fixed;z-index:8;left:50%;bottom:28px;transform:translate(-50%,20px);opacity:0;pointer-events:none;padding:11px 17px;border:1px solid rgba(100,247,255,.35);border-radius:999px;background:rgba(8,17,43,.9);color:#dffcff;font-size:12px;transition:.3s;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.greeting{position:fixed;inset:0;z-index:4;display:none;align-items:center;justify-content:center;text-align:center;padding:24px;background:radial-gradient(ellipse at center,rgba(15,24,63,.45),rgba(4,6,20,.55));pointer-events:none}
+.greeting.show{display:flex;animation:fadein .8s ease}
+.greeting-inner{max-width:850px}
+.greeting .big{font-size:clamp(40px,9vw,92px);font-weight:900;letter-spacing:.08em;background:linear-gradient(100deg,#fff,#7ffaff,#ff8de7,#ffe3a0);color:transparent;background-clip:text;-webkit-background-clip:text;text-shadow:0 0 42px rgba(100,247,255,.22);animation:rise 1.2s both}
+.greeting .small{font-size:clamp(14px,3vw,20px);letter-spacing:.2em;color:#e0e6ff;margin-top:20px;animation:rise 1.5s .25s both}
+@keyframes rise{from{opacity:0;transform:translateY(30px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+ .final-count{position:fixed;inset:0;z-index:6;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(3,5,20,.68);backdrop-filter:blur(8px);pointer-events:none}
+.final-count.show{display:flex;animation:fadein .18s ease}
+.final-number{font-size:clamp(120px,35vw,300px);font-weight:900;line-height:1;color:transparent;-webkit-text-stroke:2px #a8fbff;background:linear-gradient(140deg,#fff,#64f7ff,#ff6bdf,#ffe2a3);background-clip:text;-webkit-background-clip:text;filter:drop-shadow(0 0 30px rgba(100,247,255,.65));animation:countPop .85s cubic-bezier(.2,.8,.2,1)}
+.final-caption{margin-top:22px;color:#d4e9ff;font-size:11px;letter-spacing:.42em;text-shadow:0 0 15px #64f7ff}
+@keyframes countPop{0%{opacity:0;transform:scale(1.65) rotate(-8deg);filter:blur(12px)}55%{opacity:1;transform:scale(.94) rotate(2deg);filter:blur(0)}100%{transform:scale(1)}}
+@media(max-width:520px){main{padding-top:75px;padding-bottom:40px}.topline{margin-bottom:24px;font-size:9px}.subtitle{letter-spacing:.1em;margin:18px 0 28px}.timebox{border-radius:11px;padding:13px 4px 10px}.unit{font-size:9px}.btn{padding:12px 17px;font-size:12px}.corner{top:12px;right:12px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas><div class="aurora"></div><div class="grid-overlay"></div>
+<button class="icon-btn corner" id="musicBtn" aria-label="开启背景音乐" title="背景音乐">♫</button>
+<main>
+  <section class="shell">
+    <div class="topline"><span class="live-dot"></span><span>INTERSTELLAR NEW YEAR CELEBRATION</span><span class="live-dot"></span></div>
+    <div class="eyebrow">A NEW CHAPTER IS LOADING</div>
+    <h1>奔赴新程<span class="year" id="yearTitle">2027</span></h1>
+    <p class="subtitle">把遗憾留在星河，把热爱带进新年</p>
+    <div class="count-label" id="countLabel">距离新年启程还有</div>
+    <div class="countdown" aria-label="新年倒计时">
+      <div class="timebox"><div class="num" id="days">000</div><div class="unit">DAYS</div></div>
+      <div class="timebox"><div class="num" id="hours">00</div><div class="unit">HOURS</div></div>
+      <div class="timebox"><div class="num" id="minutes">00</div><div class="unit">MINUTES</div></div>
+      <div class="timebox"><div class="num" id="seconds">00</div><div class="unit">SECONDS</div></div>
+    </div>
+    <div class="status" id="status">愿每一份努力，都在未来闪闪发光。</div>
+    <div class="actions">
+      <button class="btn primary" id="wishBtn">✦ 写下新年愿望</button>
+      <button class="btn" id="fireBtn">✧ 点亮一场烟花</button>
+      <button class="btn" id="shareBtn">↗ 分享这份祝福</button>
+      <button class="btn" id="cardBtn">✧ 制作专属祝福卡</button>
+    </div>
+    <div class="hint">点击任意空白处，也能让烟花为你绽放</div>
+  </section>
+</main>
+<div class="footer">MAY YOUR NEXT CHAPTER BE BRIGHTER THAN THE STARS · 2027</div>
+
+<div class="modal" id="wishModal" role="dialog" aria-modal="true" aria-labelledby="wishTitle">
+  <div class="panel">
+    <button class="close" id="closeModal" aria-label="关闭">×</button>
+    <div id="wishForm">
+      <h2 id="wishTitle">把愿望交给星星 ✦</h2>
+      <p>认真写下一个愿望吧。愿新的一年，你有奔赴热爱的勇气，也有收获幸福的幸运。</p>
+      <textarea id="wishText" maxlength="180" placeholder="新的一年，我希望……"></textarea>
+      <button class="btn primary" id="saveWish">封存这份愿望</button>
+    </div>
+    <div class="wish-result" id="wishResult">
+      <div style="font-size:34px">✧ ✦ ✧</div>
+      <strong>愿望已发送至星际</strong>
+      <span id="wishEcho"></span>
+      <button class="btn" id="closeWishResult">收下祝福</button>
+    </div>
+  </div>
+</div>
+<div class="greeting" id="greeting">
+  <div class="greeting-inner">
+    <div class="big">新年快乐</div>
+    <div class="small">愿你所行皆坦途，所愿皆成真。</div>
+  </div>
+</div>
+<div class="final-count" id="finalCount" aria-live="assertive"><div class="final-number" id="finalNumber">10</div><div class="final-caption">THE NEW YEAR IS HERE</div></div>
+<div class="modal" id="cardModal" role="dialog" aria-modal="true" aria-labelledby="cardTitle">
+  <div class="panel">
+    <button class="close" id="closeCard" aria-label="关闭">×</button>
+    <h2 id="cardTitle">制作一张专属祝福卡 ✦</h2>
+    <p>写上朋友的名字，把这份星际祝福送给 TA。</p>
+    <input id="friendName" maxlength="24" placeholder="朋友的名字 / 称呼" style="width:100%;border:1px solid rgba(125,187,255,.28);border-radius:13px;background:rgba(3,9,29,.65);padding:14px;color:white;outline:none;font:14px inherit">
+    <button class="btn primary" id="makeCard">生成祝福卡</button>
+    <div id="cardPreview" style="display:none;margin-top:18px;padding:24px 16px;text-align:center;border:1px solid rgba(100,247,255,.38);border-radius:16px;background:radial-gradient(circle at 50% 0%,rgba(76,100,205,.32),transparent 70%),rgba(3,8,28,.75)">
+      <div style="color:#64f7ff;font-size:10px;letter-spacing:.3em">A WISH FOR YOU</div>
+      <div id="cardGreeting" style="font-size:27px;font-weight:800;margin:15px 0;color:#ffe4a8">新年快乐</div>
+      <div style="font-size:13px;line-height:1.9;color:#dce7ff">愿新的一年，心中有光，脚下有路。<br>所遇皆温柔，所行皆坦途。</div>
+      <div style="margin-top:18px;color:#8ea3d7;font-size:10px;letter-spacing:.18em">HAPPY NEW YEAR · THE NEXT CHAPTER</div>
+    </div>
+    <button class="btn" id="shareCard" style="display:none">复制专属祝福</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const canvas = $('sky'), ctx = canvas.getContext('2d');
+  let w=0,h=0,dpr=1,stars=[],fireworks=[],particles=[],lastAuto=0;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resize(){
+    dpr=Math.min(window.devicePixelRatio||1,2);w=innerWidth;h=innerHeight;
+    canvas.width=w*dpr;canvas.height=h*dpr;canvas.style.width=w+'px';canvas.style.height=h+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    stars=Array.from({length:Math.min(180,Math.floor(w*h/6500))},()=>({
+      x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.35+.25,
+      a:Math.random()*.65+.2,s:Math.random()*.012+.003,p:Math.random()*6.28
+    }));
+  }
+  window.addEventListener('resize',resize);resize();
+
+  function launch(x,y,power=1){
+    const hue=[185,195,280,315,42,350][Math.floor(Math.random()*6)];
+    const count=Math.floor((48+Math.random()*34)*power);
+    const speed=(2.1+Math.random()*3.3)*power;
+    fireworks.push({x,y,tx:x,ty:y,vy:-speed*2.3,life:0,max:35+Math.random()*18,hue});
+    for(let i=0;i<count;i++){
+      const angle=Math.PI*2*i/count+Math.random()*.12;
+      const velocity=(1.1+Math.random()*4.2)*power;
+      particles.push({x,y,vx:Math.cos(angle)*velocity,vy:Math.sin(angle)*velocity,
+        life:0,max:55+Math.random()*45,size:Math.random()*2.1+1,hue,
+        alpha:1,drag:.985+Math.random()*.009,glow:Math.random()>.55});
+    }
+    if(particles.length>2400)particles.splice(0,particles.length-2400);
+  }
+  function frame(t){
+    ctx.clearRect(0,0,w,h);
+    for(const s of stars){
+      s.p+=s.s;const a=s.a*(.65+.35*Math.sin(s.p));
+      ctx.globalAlpha=a;ctx.fillStyle='#d9f7ff';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+    }
+    ctx.globalAlpha=1;
+    for(let i=fireworks.length-1;i>=0;i--){
+      const f=fireworks[i];f.life++;f.y+=f.vy;f.vy+=.11;
+      if(f.life>f.max)fireworks.splice(i,1);
+    }
+    for(let i=particles.length-1;i>=0;i--){
+      const p=particles[i];p.life++;p.x+=p.vx;p.y+=p.vy;p.vx*=p.drag;p.vy=p.vy*p.drag+.025;
+      p.alpha=Math.max(0,1-p.life/p.max);
+      ctx.globalAlpha=p.alpha;ctx.fillStyle=`hsla(${p.hue},100%,${p.glow?78:62}%,1)`;
+      if(p.glow){ctx.shadowBlur=12;ctx.shadowColor=`hsl(${p.hue},100%,65%)`}else ctx.shadowBlur=0;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.size*(1-p.life/p.max*.45),0,Math.PI*2);ctx.fill();
+      if(p.life<13){
+        ctx.globalAlpha=p.alpha*.34;ctx.strokeStyle=`hsla(${p.hue},100%,78%,1)`;ctx.lineWidth=.8;
+        ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*3.2,p.y-p.vy*3.2);ctx.stroke();
+      }
+      if(p.life>=p.max)particles.splice(i,1);
+    }
+    ctx.globalAlpha=1;ctx.shadowBlur=0;
+    if(!reduced && t-lastAuto>1250 && Math.random()>.18){launch(w*(.15+Math.random()*.7),h*(.12+Math.random()*.42),.65);lastAuto=t}
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  window.addEventListener('pointerdown',e=>{
+    if(e.target.closest('button,.panel,textarea'))return;
+    launch(e.clientX,e.clientY,1);
+  });
+
+  // Automatically counts down to the next January 1 in the visitor's local time.
+  function nextNewYear(now=new Date()){
+    let year=now.getFullYear();
+    let target=new Date(year+1,0,1,0,0,0,0);
+    return target;
+  }
+  let target=nextNewYear(), finaleStarted=false, finaleDone=false;
+  function pad(n){return String(n).padStart(2,'0')}
+  function celebrateMidnight(){
+    if(finaleDone)return;
+    finaleDone=true;
+    $('finalCount').classList.remove('show');
+    $('greeting').classList.add('show');
+    $('status').textContent='新年快乐！新的篇章已经开启。';
+    const bursts=[
+      [w*.18,h*.34,1.5],[w*.5,h*.22,1.9],[w*.82,h*.34,1.5],
+      [w*.32,h*.48,1.25],[w*.68,h*.48,1.25],[w*.5,h*.58,1.7]
+    ];
+    bursts.forEach((b,i)=>setTimeout(()=>launch(b[0],b[1],b[2]),i*260));
+    setTimeout(()=>$('greeting').classList.remove('show'),7500);
+    setTimeout(()=>{target=nextNewYear();finaleStarted=false;finaleDone=false;},8000);
+  }
+  function updateClock(){
+    const now=new Date();
+    let diff=target-now;
+    if(diff<=10000 && diff>0 && !finaleStarted){
+      finaleStarted=true;
+      $('finalCount').classList.add('show');
+      let last=-1;
+      const tick=()=>{
+        const remain=Math.max(0,target-Date.now());
+        const n=Math.ceil(remain/1000);
+        if(n!==last && n>0){last=n;$('finalNumber').textContent=n;launch(w*(.25+Math.random()*.5),h*(.18+Math.random()*.25),.7)}
+        if(remain<=0){celebrateMidnight();return}
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+    if(diff<=0){
+      if(!finaleStarted){finaleStarted=true;celebrateMidnight()}
+      diff=0;
+    }
+    const total=Math.floor(Math.max(0,diff)/1000);
+    $('days').textContent=String(Math.floor(total/86400)).padStart(3,'0');
+    $('hours').textContent=pad(Math.floor(total%86400/3600));
+    $('minutes').textContent=pad(Math.floor(total%3600/60));
+    $('seconds').textContent=pad(total%60);
+    $('yearTitle').textContent=target.getFullYear();
+    $('countLabel').textContent='距离 '+target.getFullYear()+' 年新年启程还有';
+    if(!finaleStarted)$('status').textContent='愿每一份努力，都在未来闪闪发光。';
+  }
+  updateClock();setInterval(updateClock,200);
+
+  const modal=$('wishModal');
+  $('wishBtn').addEventListener('click',()=>{modal.classList.add('show');$('wishText').focus()});
+  function closeModal(){modal.classList.remove('show')}
+  $('closeModal').addEventListener('click',closeModal);
+  $('closeWishResult').addEventListener('click',closeModal);
+  modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+  $('saveWish').addEventListener('click',()=>{
+    const wish=$('wishText').value.trim();
+    if(!wish){showToast('先写下一句愿望吧 ✦');$('wishText').focus();return}
+    try{localStorage.setItem('starlight-new-year-wish',wish)}catch(e){}
+    $('wishEcho').textContent=wish;
+    $('wishForm').style.display='none';$('wishResult').style.display='block';
+    launch(w*.5,h*.38,1.3);showToast('愿望已被星光收藏');
+  });
+  $('fireBtn').addEventListener('click',()=>{launch(w*(.25+Math.random()*.5),h*(.2+Math.random()*.38),1.25);showToast('为你点亮一场烟花 ✧')});
+
+  let toastTimer;
+  function showToast(message){
+    const el=$('toast');el.textContent=message;el.classList.add('show');
+    clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2200);
+  }
+  $('shareBtn').addEventListener('click',async()=>{
+    const data={title:'星际新年 · 新年快乐',text:'愿你所行皆坦途，所愿皆成真。一起点亮新年的第一场烟花！',url:location.href};
+    try{
+      if(navigator.share)await navigator.share(data);
+      else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(location.href);showToast('网页链接已复制，快分享给朋友吧！')}
+      else showToast('复制浏览器地址栏链接即可分享');
+    }catch(e){if(e.name!=='AbortError')showToast('复制浏览器地址栏链接即可分享')}
+  });
+
+  const cardModal=$('cardModal');
+  $('cardBtn').addEventListener('click',()=>cardModal.classList.add('show'));
+  $('closeCard').addEventListener('click',()=>cardModal.classList.remove('show'));
+  cardModal.addEventListener('click',e=>{if(e.target===cardModal)cardModal.classList.remove('show')});
+  $('makeCard').addEventListener('click',()=>{
+    const name=$('friendName').value.trim()||'亲爱的朋友';
+    $('cardGreeting').textContent=name+'，新年快乐！';
+    $('cardPreview').style.display='block';$('shareCard').style.display='block';
+    launch(w*.5,h*.36,1.05);
+  });
+  $('shareCard').addEventListener('click',async()=>{
+    const name=$('friendName').value.trim()||'亲爱的朋友';
+    const message=`${name}，新年快乐！愿新的一年，心中有光，脚下有路。所遇皆温柔，所行皆坦途。`;
+    try{
+      if(navigator.share)await navigator.share({title:'送你一份星际新年祝福',text:message,url:location.href});
+      else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(message+' '+location.href);showToast('专属祝福和网页链接已复制')}
+      else showToast(message);
+    }catch(e){if(e.name!=='AbortError')showToast('祝福卡已生成，可以截图分享给朋友')}
+  });
+
+  // A gentle synthesized ambient loop: no external audio file required.
+  let audioCtx=null,master=null,musicOn=false,musicTimer=null,noteIndex=0;
+  const notes=[220,261.63,329.63,392,329.63,261.63,196,246.94];
+  function playNote(){
+    if(!audioCtx||!musicOn)return;
+    const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+    const now=audioCtx.currentTime;
+    osc.type='sine';osc.frequency.value=notes[noteIndex++%notes.length];
+    gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.045,now+.12);
+    gain.gain.exponentialRampToValueAtTime(.0001,now+1.5);
+    osc.connect(gain);gain.connect(master);osc.start(now);osc.stop(now+1.6);
+  }
+  $('musicBtn').addEventListener('click',async()=>{
+    try{
+      if(!audioCtx){audioCtx=new (window.AudioContext||window.webkitAudioContext)();master=audioCtx.createGain();master.gain.value=.55;master.connect(audioCtx.destination)}
+      if(audioCtx.state==='suspended')await audioCtx.resume();
+      musicOn=!musicOn;
+      $('musicBtn').textContent=musicOn?'♫':'♪';
+      $('musicBtn').style.color=musicOn?'#64f7ff':'#dffaff';
+      $('musicBtn').setAttribute('aria-label',musicOn?'关闭背景音乐':'开启背景音乐');
+      if(musicOn){playNote();musicTimer=setInterval(playNote,620);showToast('星际旋律已开启')}
+      else{clearInterval(musicTimer);showToast('背景音乐已关闭')}
+    }catch(e){showToast('当前浏览器暂不支持音频播放')}
+  });
+
+  // If a visitor opens the page at/after midnight, celebrate once for that date.
+  const dateKey=new Date().toLocaleDateString();
+  try{
+    if(sessionStorage.getItem('celebrated-'+dateKey)!=='yes' && new Date().getHours()===0 && new Date().getMinutes()<2){
+      $('greeting').classList.add('show');sessionStorage.setItem('celebrated-'+dateKey,'yes');
+      launch(w*.5,h*.32,1.7);setTimeout(()=>launch(w*.25,h*.4,1.2),500);setTimeout(()=>launch(w*.75,h*.4,1.2),900);
+      setTimeout(()=>$('greeting').classList.remove('show'),6500);
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>

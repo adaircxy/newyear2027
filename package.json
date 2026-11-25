@@ -1,0 +1,13 @@
+{
+  "name": "interstellar-new-year",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A dependency-free Canvas New Year celebration",
+  "scripts": {
+    "start": "node serve.cjs",
+    "test": "node tests/browser.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.51.1"
+  }
+}

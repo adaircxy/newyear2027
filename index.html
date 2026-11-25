@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080B1E">
+<meta name="description" content="一场写给所有朋友的星空跨年派对。点击屏幕点亮烟花，许下新年愿望。">
+<meta property="og:title" content="星际新年 · A New Beginning">
+<meta property="og:description" content="一场写给所有朋友的星空跨年。点开点亮你的新年第一场烟花。">
+<meta property="og:type" content="website">
+<title>星际新年 · A New Beginning</title>
+<style>
+:root{
+  /* 极光紫蓝 × 香槟金 */
+  --bg:#080B1E;--bg-2:#111735;
+  --aurora:#8B5CF6;--glacier:#36D9E8;--magenta:#E879F9;
+  --gold:#F6D58A;--gold-soft:#FFEFC9;--white:#FFFFFF;--lavender:#C7B9FF;
+  --cyan:var(--glacier);--pink:var(--magenta);
+  --muted:#A9B1DA;--glass:rgba(17,23,53,.62);
+  --line-purple:rgba(139,92,246,.26);--line-cyan:rgba(54,217,232,.24);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:#F4F2FF;font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+body{overflow-x:hidden}
+button{font:inherit}
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#words{position:fixed;inset:0;width:100%;height:100%;z-index:7;pointer-events:none}
+.aurora{position:fixed;inset:-20%;z-index:0;pointer-events:none;opacity:.5;filter:blur(65px);background:
+ radial-gradient(ellipse at 20% 30%,rgba(139,92,246,.26),transparent 40%),
+ radial-gradient(ellipse at 80% 25%,rgba(72,80,220,.18),transparent 36%),
+ radial-gradient(ellipse at 50% 90%,rgba(54,217,232,.11),transparent 40%);
+ animation:aurora 15s ease-in-out infinite alternate}
+@keyframes aurora{to{transform:translate3d(3%,-2%,0) scale(1.08);filter:blur(85px) hue-rotate(18deg)}}
+.grid-overlay{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.12;background-image:linear-gradient(rgba(139,92,246,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,.16) 1px,transparent 1px);background-size:58px 58px;mask-image:linear-gradient(to bottom,transparent 2%,black 70%,transparent)}
+.grid-overlay:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(139,92,246,.03) 4px 5px);opacity:.7}
+.nebula{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.nebula:before,.nebula:after{content:"";position:absolute;border:1px solid rgba(139,92,246,.13);border-radius:50%;transform:rotate(-18deg);box-shadow:0 0 80px rgba(139,92,246,.10),inset 0 0 70px rgba(54,217,232,.05)}
+.nebula:before{width:72vw;height:28vw;left:-12vw;top:20vh}.nebula:after{width:56vw;height:22vw;right:-8vw;top:54vh;border-color:rgba(246,213,138,.12);transform:rotate(18deg)}
+.parallax-glow{position:fixed;z-index:0;pointer-events:none;width:38vw;height:38vw;left:calc(50% - 19vw);top:26%;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.13),transparent 65%);filter:blur(16px);transition:transform .6s ease-out}
+main{position:relative;z-index:1;min-height:100svh;display:flex;align-items:center;justify-content:center;padding:34px 18px 54px}
+.shell{width:min(100%,980px);text-align:center;position:relative}
+.topline{display:flex;align-items:center;justify-content:center;gap:10px;color:var(--muted);font-size:11px;letter-spacing:.28em;text-transform:uppercase;margin-bottom:30px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--glacier);box-shadow:0 0 14px var(--glacier);animation:pulse 1.4s infinite}
+@keyframes pulse{50%{opacity:.35;transform:scale(.7)}}
+.eyebrow{color:var(--glacier);font-size:clamp(10px,2vw,12px);letter-spacing:.42em;text-transform:uppercase;text-shadow:0 0 16px rgba(54,217,232,.6);margin-bottom:15px}
+h1{font-weight:800;line-height:1.05;letter-spacing:.04em;font-size:clamp(48px,10vw,106px);margin:0;text-shadow:0 0 20px rgba(139,92,246,.25),0 0 52px rgba(246,213,138,.14)}
+h1 .year{display:block;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.8);background:linear-gradient(100deg,#fff 8%,#F6D58A 40%,#C7B9FF 70%,#36D9E8);background-clip:text;-webkit-background-clip:text;filter:drop-shadow(0 0 22px rgba(246,213,138,.25))}
+.subtitle{color:var(--lavender);font-size:clamp(13px,2.4vw,16px);letter-spacing:.18em;margin:22px 0 34px}
+.countdown{display:flex;justify-content:center;align-items:stretch;gap:clamp(8px,2.3vw,20px);margin:0 auto 28px}
+.timebox{width:clamp(66px,15vw,112px);padding:15px 7px 12px;border:1px solid var(--line-purple);border-radius:14px;background:linear-gradient(145deg,rgba(24,30,66,.72),rgba(14,18,42,.62));box-shadow:inset 0 0 22px rgba(139,92,246,.08),0 0 25px rgba(139,92,246,.10);backdrop-filter:blur(12px);position:relative;overflow:hidden}
+.timebox:before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 25%,rgba(246,213,138,.07),transparent 55%);transform:translateX(-120%);animation:shine 5s infinite}
+@keyframes shine{50%,100%{transform:translateX(130%)}}
+.num{font-variant-numeric:tabular-nums;font-size:clamp(27px,6vw,48px);font-weight:700;line-height:1.1;color:var(--gold);text-shadow:0 0 20px rgba(246,213,138,.5),0 0 44px rgba(246,213,138,.18)}
+.unit{font-size:10px;letter-spacing:.2em;color:#A4AAD4;margin-top:8px}
+.count-label{font-size:11px;color:#8E96C0;letter-spacing:.16em;margin-bottom:14px}
+.status{min-height:25px;color:#E6E2FF;font-size:13px;letter-spacing:.08em;margin-bottom:23px}
+.actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.btn{border:1px solid rgba(139,92,246,.42);border-radius:999px;padding:13px 23px;color:#EDE9FF;background:rgba(17,23,53,.55);cursor:pointer;letter-spacing:.08em;font-size:13px;transition:.25s;box-shadow:0 0 22px rgba(139,92,246,.10);backdrop-filter:blur(10px)}
+.btn:hover{transform:translateY(-3px);border-color:rgba(54,217,232,.6);box-shadow:0 0 26px rgba(54,217,232,.18),0 0 46px rgba(139,92,246,.14)}
+.btn.primary{color:#1A1330;background:linear-gradient(100deg,#FFEFC9,#F6D58A 55%,#E9C471);border:0;font-weight:750;box-shadow:0 0 24px rgba(246,213,138,.22)}
+.btn.primary:hover{filter:brightness(1.06);box-shadow:0 0 34px rgba(246,213,138,.4)}
+.hint{color:#7C84B2;font-size:11px;letter-spacing:.12em;margin-top:24px}
+.footer{position:relative;z-index:1;text-align:center;color:#6B739E;font-size:10px;letter-spacing:.2em;padding:0 12px 22px}
+.corner{position:fixed;z-index:2;top:18px;right:18px}
+.icon-btn{width:42px;height:42px;border:1px solid rgba(139,92,246,.30);border-radius:50%;background:rgba(17,23,53,.7);color:#EDE9FF;cursor:pointer;font-size:17px;backdrop-filter:blur(10px)}
+.icon-btn:hover{box-shadow:0 0 20px rgba(54,217,232,.2)}
+.modal{position:fixed;inset:0;z-index:9;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(4,6,20,.74);backdrop-filter:blur(12px)}
+.modal.show{display:flex;animation:fadein .25s ease}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.panel{width:min(100%,460px);border:1px solid rgba(139,92,246,.34);border-radius:22px;padding:28px;background:linear-gradient(145deg,rgba(21,27,62,.96),rgba(12,16,40,.97));box-shadow:0 0 70px rgba(139,92,246,.16);text-align:left;position:relative}
+.panel h2{font-size:24px;margin:0 0 8px}
+.panel p{font-size:13px;color:#B4BCE0;line-height:1.7;margin:0 0 18px}
+.close{position:absolute;right:17px;top:15px;border:0;background:none;color:#C6CBEF;font-size:23px;cursor:pointer}
+textarea{width:100%;min-height:118px;resize:vertical;border:1px solid rgba(139,92,246,.30);border-radius:13px;background:rgba(9,13,34,.7);padding:14px;color:white;outline:none;font:14px/1.7 inherit}
+textarea:focus{border-color:var(--glacier);box-shadow:0 0 0 3px rgba(54,217,232,.10)}
+.panel .btn{margin-top:14px;width:100%}
+.wish-result{display:none;text-align:center;padding:14px 4px 4px}
+.wish-result strong{display:block;color:var(--gold);font-size:22px;margin:12px 0}
+.wish-result span{display:block;color:var(--lavender);font-size:13px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
+.share-box{max-height:46vh;overflow:auto;margin:0 0 14px;border:1px solid rgba(246,213,138,.22);border-radius:6px;background:#070A18}
+.share-box img{display:block;width:100%;height:auto}
+.share-tip{margin:0 0 4px;font-size:11.5px;line-height:1.8;color:#8E96C0}
+.toast{position:fixed;z-index:10;left:50%;bottom:28px;transform:translate(-50%,20px);opacity:0;pointer-events:none;padding:11px 17px;border:1px solid rgba(246,213,138,.30);border-radius:999px;background:rgba(12,17,40,.92);color:#F5F0FF;font-size:12px;transition:.3s;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.greeting{position:fixed;inset:0;z-index:4;display:none;align-items:center;justify-content:center;text-align:center;padding:24px;background:radial-gradient(ellipse at center,rgba(17,23,53,.5),rgba(4,6,20,.6));pointer-events:none}
+.greeting.show{display:flex;animation:fadein .8s ease}
+.greeting-inner{max-width:850px}
+.greeting .big{font-size:clamp(40px,9vw,92px);font-weight:900;letter-spacing:.08em;background:linear-gradient(100deg,#fff,#F6D58A,#C7B9FF,#36D9E8);color:transparent;background-clip:text;-webkit-background-clip:text;text-shadow:0 0 42px rgba(246,213,138,.2);animation:rise 1.2s both}
+.greeting .small{font-size:clamp(14px,3vw,20px);letter-spacing:.2em;color:#DBD4FF;margin-top:20px;animation:rise 1.5s .25s both}
+@keyframes rise{from{opacity:0;transform:translateY(30px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+ .final-count{position:fixed;inset:0;z-index:6;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(4,6,20,.74);backdrop-filter:blur(8px);pointer-events:none}
+.final-count.show{display:flex;animation:fadein .18s ease}
+.final-count{background:rgba(4,6,20,.74);backdrop-filter:blur(3px)}
+.final-count .final-number{display:none}
+.final-caption{position:absolute;bottom:8vh}
+body.showtime main,body.showtime .footer{opacity:0;filter:blur(3px);transition:opacity .8s,filter .8s}
+body.showtime #sky{z-index:6}
+body.showtime .final-count{z-index:5}
+body.celebrating .final-caption{opacity:0}
+.celebration-flash{position:fixed;inset:0;z-index:8;pointer-events:none;background:#FFF6E4;opacity:0}.celebration-flash.show{animation:flash .9s ease-out}@keyframes flash{0%{opacity:.9}100%{opacity:0}}
+.final-number{font-size:clamp(120px,35vw,300px);font-weight:900;line-height:1;color:transparent;-webkit-text-stroke:2px #F6D58A;background:linear-gradient(140deg,#fff,#F6D58A,#C7B9FF,#36D9E8);background-clip:text;-webkit-background-clip:text;filter:drop-shadow(0 0 30px rgba(246,213,138,.5));animation:countPop .85s cubic-bezier(.2,.8,.2,1)}
+.final-caption{margin-top:22px;color:#E9E3FF;font-size:11px;letter-spacing:.42em;text-shadow:0 0 15px rgba(246,213,138,.72)}
+@keyframes countPop{0%{opacity:0;transform:scale(1.65) rotate(-8deg);filter:blur(12px)}55%{opacity:1;transform:scale(.94) rotate(2deg);filter:blur(0)}100%{transform:scale(1)}}
+@media(max-width:520px){main{padding-top:75px;padding-bottom:40px}.topline{margin-bottom:24px;font-size:9px}.subtitle{letter-spacing:.1em;margin:18px 0 28px}.timebox{border-radius:11px;padding:13px 4px 10px}.unit{font-size:9px}.btn{padding:12px 17px;font-size:12px}.corner{top:12px;right:12px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas><canvas id="words"></canvas><div class="aurora"></div><div class="nebula"></div><div class="parallax-glow"></div><div class="grid-overlay"></div>
+<button class="icon-btn corner" id="musicBtn" aria-label="开启背景音乐" title="背景音乐">♫</button>
+<main>
+  <section class="shell">
+    <div class="topline"><span class="live-dot"></span><span>INTERSTELLAR NEW YEAR CELEBRATION</span><span class="live-dot"></span></div>
+    <div class="eyebrow">A NEW CHAPTER IS LOADING</div>
+    <h1>奔赴新程<span class="year" id="yearTitle">2027</span></h1>
+    <p class="subtitle">把遗憾留在星河，把热爱带进新年</p>
+    <div class="count-label" id="countLabel">距离新年启程还有</div>
+    <div class="countdown" aria-label="新年倒计时">
+      <div class="timebox"><div class="num" id="days">000</div><div class="unit">DAYS</div></div>
+      <div class="timebox"><div class="num" id="hours">00</div><div class="unit">HOURS</div></div>
+      <div class="timebox"><div class="num" id="minutes">00</div><div class="unit">MINUTES</div></div>
+      <div class="timebox"><div class="num" id="seconds">00</div><div class="unit">SECONDS</div></div>
+    </div>
+    <div class="status" id="status">愿每一份努力，都在未来闪闪发光。</div>
+    <div class="actions">
+      <button class="btn primary" id="wishBtn">✦ 写下新年愿望</button>
+      <button class="btn" id="fireBtn">✧ 点亮一场烟花</button>
+      <button class="btn" id="shareBtn">↗ 分享这份祝福</button>
+      <button class="btn" id="cardBtn">✧ 制作专属祝福卡</button>
+    </div>
+    <div class="hint">点击任意空白处，也能让烟花为你绽放</div>
+  </section>
+</main>
+<div class="footer">MAY YOUR NEXT CHAPTER BE BRIGHTER THAN THE STARS · <span id="footerYear">2027</span></div>
+
+<div class="modal" id="wishModal" role="dialog" aria-modal="true" aria-labelledby="wishTitle">
+  <div class="panel">
+    <button class="close" id="closeModal" aria-label="关闭">×</button>
+    <div id="wishForm">
+      <h2 id="wishTitle">把愿望交给星星 ✦</h2>
+      <p>认真写下一个愿望吧。愿新的一年，你有奔赴热爱的勇气，也有收获幸福的幸运。</p>
+      <textarea id="wishText" maxlength="180" placeholder="新的一年，我希望……"></textarea>
+      <button class="btn primary" id="saveWish">封存这份愿望</button>
+    </div>
+    <div class="wish-result" id="wishResult">
+      <div style="font-size:34px">✧ ✦ ✧</div>
+      <strong>愿望已发送至星际</strong>
+      <span id="wishEcho"></span>
+      <button class="btn" id="closeWishResult">收下祝福</button>
+    </div>
+  </div>
+</div>
+<div class="greeting" id="greeting">
+  <div class="greeting-inner">
+    <div class="big">新年快乐</div>
+    <div class="small">愿你所行皆坦途，所愿皆成真。</div>
+  </div>
+</div>
+<div class="final-count" id="finalCount" aria-live="assertive"><div class="final-number" id="finalNumber">10</div><div class="final-caption">THE NEW YEAR IS HERE</div></div>
+<div class="modal" id="cardModal" role="dialog" aria-modal="true" aria-labelledby="cardTitle">
+  <div class="panel">
+    <button class="close" id="closeCard" aria-label="关闭">×</button>
+    <h2 id="cardTitle">制作一张专属祝福卡 ✦</h2>
+    <p>写上朋友的名字，把这份星际祝福送给 TA。</p>
+    <input id="friendName" maxlength="24" placeholder="朋友的名字 / 称呼" style="width:100%;border:1px solid rgba(139,92,246,.30);border-radius:13px;background:rgba(9,13,34,.7);padding:14px;color:white;outline:none;font:14px inherit">
+    <button class="btn primary" id="makeCard">生成祝福卡</button>
+    <div id="cardPreview" style="display:none;margin-top:18px;padding:24px 16px;text-align:center;border:1px solid rgba(246,213,138,.35);border-radius:16px;background:radial-gradient(circle at 50% 0%,rgba(139,92,246,.30),transparent 70%),rgba(4,7,24,.78)">
+      <div style="color:#36D9E8;font-size:10px;letter-spacing:.3em">A WISH FOR YOU</div>
+      <div id="cardGreeting" style="font-size:27px;font-weight:800;margin:15px 0;color:#F6D58A">新年快乐</div>
+      <div style="font-size:13px;line-height:1.9;color:#E2DEFF">愿新的一年，心中有光，脚下有路。<br>所遇皆温柔，所行皆坦途。</div>
+      <div style="margin-top:18px;color:#9AA0CC;font-size:10px;letter-spacing:.18em">HAPPY NEW YEAR · THE NEXT CHAPTER</div>
+    </div>
+    <button class="btn" id="shareCard" style="display:none">复制专属祝福</button>
+    <button class="btn" id="saveCardImg" style="display:none">保存祝福卡图片</button>
+  </div>
+</div>
+<div class="modal" id="shareModal" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+  <div class="panel">
+    <button class="close" id="closeShare" aria-label="关闭">×</button>
+    <h2 id="shareTitle">分享这份祝福</h2>
+    <p class="share-tip" id="shareTip">微信里不能直接分享链接：保存下面这张图，长按发给好友或发朋友圈就行。</p>
+    <div class="share-box"><img id="shareImg" alt="新年祝福卡"></div>
+    <button class="btn primary" id="saveShareImg">保存图片</button>
+    <button class="btn" id="copyShareText">复制祝福文案</button>
+    <button class="btn" id="sysShare">用系统分享…</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="celebration-flash" id="celebrationFlash"></div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const canvas = $('sky'), ctx = canvas.getContext('2d');
+  const wordsCanvas = $('words'), wctx = wordsCanvas.getContext('2d');
+  let w=0,h=0,dpr=1,stars=[],rockets=[],particles=[],textParticles=[],flashes=[],glitters=[],lastAuto=0;
+  let particleMode='idle',particleNumber=null,particleIntensity=1,greetingStartedAt=0,lastTextFrame=performance.now();
+  const textCanvas=document.createElement('canvas'),textCtx=textCanvas.getContext('2d',{willReadFrequently:true});
+  const C={white:'#FFFFFF',gold:'#F6D58A',goldSoft:'#FFEFC9',lavender:'#C7B9FF',cyan:'#36D9E8',magenta:'#E879F9',
+    mint:'#8CFFC1',amber:'#FFC46B',rose:'#FF8FA3'};
+  const particlePalette=[C.white,C.gold,C.goldSoft,C.lavender,C.cyan,C.magenta,C.mint,C.amber,C.rose];
+  // 倒计时数字配色：?digits=rainbow|ice|flame|gold
+  const DIGIT_SCHEMES={
+    rainbow:{ring:[C.magenta,C.lavender,C.cyan,C.mint,C.amber,C.rose],core:[C.white,C.white,C.goldSoft]},
+    ice:{ring:[C.cyan,C.lavender,C.white],core:[C.white,C.cyan]},
+    flame:{ring:[C.amber,C.rose,C.gold],core:[C.goldSoft,C.white]},
+    gold:{ring:[C.gold,C.white,C.lavender],core:[C.goldSoft,C.white]}
+  };
+  const DIGIT_SCHEME=(()=>{const v=new URLSearchParams(location.search).get('digits');return DIGIT_SCHEMES[v]?v:'rainbow'})();
+  let finaleFireworkTimer=null;
+  let sfxCtx=null,sfxReady=false,noiseBuffer=null;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resize(){
+    dpr=Math.min(window.devicePixelRatio||1,2);w=innerWidth;h=innerHeight;
+    canvas.width=w*dpr;canvas.height=h*dpr;canvas.style.width=w+'px';canvas.style.height=h+'px';
+    wordsCanvas.width=w*dpr;wordsCanvas.height=h*dpr;wordsCanvas.style.width=w+'px';wordsCanvas.style.height=h+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    wctx.setTransform(dpr,0,0,dpr,0,0);
+    const areaStars=Math.min(560,Math.floor(w*h/2100));
+    const nearStars=Math.min(170,Math.floor(w*h/8200));
+    stars=Array.from({length:areaStars+nearStars},(_,i)=>{
+      const near=i>=areaStars;
+      return {
+        x:Math.random()*w,y:Math.random()*h,
+        r:near?Math.random()*1.35+.85:Math.random()*.8+.22,
+        a:near?Math.random()*.65+.3:Math.random()*.5+.12,
+        s:near?Math.random()*.022+.008:Math.random()*.009+.002,
+        p:Math.random()*6.28
+      };
+    });
+  }
+  window.addEventListener('resize',resize);resize();
+
+  function generateTextPoints(text,options={}){
+    const lines=Array.isArray(text)?text:[String(text)];
+    textCanvas.width=w;textCanvas.height=h;textCtx.clearRect(0,0,w,h);
+    textCtx.fillStyle='#fff';textCtx.textAlign='center';textCtx.textBaseline='middle';
+    const numberMode=options.number===true;
+    const mainSize=numberMode?Math.min(w*.42,h*.58):Math.min(w*.17,h*.22);
+    const subSize=Math.min(w*.064,h*.082);
+    lines.forEach((line,index)=>{
+      const size=index===0?mainSize:subSize;
+      textCtx.font=`900 ${size}px "Microsoft YaHei","PingFang SC","Noto Sans CJK SC",sans-serif`;
+      const y=numberMode?h*.48:(index===0?h*.43:h*.59);
+      textCtx.fillText(line,w*.5,y,w*.9);
+    });
+    const data=textCtx.getImageData(0,0,w,h).data;
+    const mobile=w<600,step=numberMode?(mobile?3:2):(mobile?2:2);
+    const points=[];
+    for(let y=0;y<h;y+=step)for(let x=0;x<w;x+=step){
+      if(data[(y*w+x)*4+3]>100)points.push({x,y,line:!numberMode&&y>h*.51?1:0});
+    }
+    const cap=numberMode?(mobile?1800:3200):(mobile?3400:6500);
+    if(points.length>cap){
+      const sampled=[],stride=points.length/cap;
+      for(let i=0;i<cap;i++)sampled.push(points[Math.floor(i*stride)]);
+      return sampled;
+    }
+    return points;
+  }
+
+  function fitTextParticles(points,delaySecondLine=false){
+    const now=performance.now();
+    while(textParticles.length<points.length){
+      const edge=Math.floor(Math.random()*4);
+      textParticles.push({x:edge<2?Math.random()*w:(edge===2?-20:w+20),y:edge<2?(edge===0?-20:h+20):Math.random()*h,vx:0,vy:0,tx:w*.5,ty:h*.5,size:.85+Math.random()*1.15,color:'#fff',phase:Math.random()*6.28,startAt:now,alpha:1});
+    }
+    if(textParticles.length>points.length)textParticles.length=points.length;
+    for(let i=points.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[points[i],points[j]]=[points[j],points[i]]}
+    textParticles.forEach((p,i)=>{
+      const point=points[i];p.tx=point.x;p.ty=point.y;
+      p.startAt=now+(delaySecondLine&&point.line?1900+Math.random()*650:Math.random()*220);
+      if(point.line){ // 第二行祈福：淡紫白为主
+        p.color=i%9===0?C.magenta:i%5===0?C.cyan:i%3===0?C.white:C.lavender;
+      }else if(particleMode==='number'){ // 倒计时数字：按角度环形取色，核心提亮
+        const scheme=DIGIT_SCHEMES[DIGIT_SCHEME];
+        const distC=Math.hypot(p.tx-w*.5,p.ty-h*.48);
+        const core=distC<Math.min(w,h)*.16;
+        if(core){
+          p.color=scheme.core[(i+Math.floor(distC/9))%scheme.core.length];
+        }else{
+          const ang=Math.atan2(p.ty-h*.48,p.tx-w*.5);
+          const ring=scheme.ring;
+          const idx=((Math.floor((ang+Math.PI)/(Math.PI*2)*ring.length)+(i%3))%ring.length+ring.length)%ring.length;
+          p.color=ring[idx];
+        }
+      }else{ // 第一行：香槟金 + 星光白
+        p.color=i%7===0?C.white:i%5===0?C.goldSoft:C.gold;
+      }
+      p.alpha=.14; // 由暗到亮
+    });
+  }
+
+  function sparkRing(cx,cy,R,count){
+    for(let i=0;i<count;i++){
+      const a=Math.PI*2*i/count+Math.random()*.1;
+      const v=1.4+Math.random()*3.6;
+      const hue=[45,50,300,190,340][i%5];
+      particles.push({x:cx+Math.cos(a)*R*.5,y:cy+Math.sin(a)*R*.5,
+        vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:0,max:24+Math.random()*26,
+        size:.85+Math.random()*1.1,hue,sat:92,light:80,trailHue:hue,alpha:1,
+        drag:.955,gravity:.02,glow:true,scale:1,trail:9,phase:Math.random()*6.28});
+    }
+  }
+  function createCountdownParticles(number){
+    particleMode='number';particleNumber=number;particleIntensity=number<=3?1+(4-number)*.42:1;
+    fitTextParticles(generateTextPoints(String(number),{number:true}));
+    // 数字周围先炸开一圈火花，数字粒子从爆点向字形聚拢
+    const cx=w*.5,cy=h*.48;
+    const R=Math.min(w,h)*(number<=3?.30:.25);
+    textParticles.forEach(p=>{
+      const a=Math.random()*Math.PI*2;
+      const r=R*(.72+Math.random()*.5);
+      p.x=cx+Math.cos(a)*r;
+      p.y=cy+Math.sin(a)*r;
+      p.vx=Math.cos(a)*(1+Math.random()*2.2);
+      p.vy=Math.sin(a)*(1+Math.random()*2.2);
+      p.alpha=.12;
+    });
+    sparkRing(cx,cy,R,number<=3?96:64);
+  }
+  function transitionToNumber(number){
+    createCountdownParticles(number);
+    const scatter=number<=3?2.8:1.4;
+    textParticles.forEach((p,i)=>{if(i%4===0){p.vx+=(Math.random()-.5)*scatter;p.vy+=(Math.random()-.5)*scatter}});
+  }
+  function explodeCountdownParticles(){
+    particleMode='explode';particleNumber=0;document.body.classList.add('celebrating');
+    textParticles.forEach(p=>{const angle=Math.atan2(p.y-h*.48,p.x-w*.5)+(Math.random()-.5)*.9;const speed=4+Math.random()*10;p.vx=Math.cos(angle)*speed;p.vy=Math.sin(angle)*speed;p.startAt=0});
+  }
+  function formGreetingText(){
+    particleMode='greeting';greetingStartedAt=performance.now();
+    fitTextParticles(generateTextPoints(['新年快乐','愿你所愿皆成真']),true);
+  }
+  function updateTextParticles(t){
+    const frameScale=Math.min(6,Math.max(.25,(t-lastTextFrame)/16.67));lastTextFrame=t;
+    for(const p of textParticles){
+      p.phase+=.025*frameScale;
+      if(particleMode==='explode'){p.x+=p.vx*frameScale;p.y+=p.vy*frameScale;p.vx*=Math.pow(.982,frameScale);p.vy=p.vy*Math.pow(.982,frameScale)+.018*frameScale;continue}
+      if(t<p.startAt){p.x+=p.vx*frameScale;p.y+=p.vy*frameScale;p.vx*=Math.pow(.98,frameScale);p.vy*=Math.pow(.98,frameScale);continue}
+      const dx=p.tx-p.x,dy=p.ty-p.y,dist=Math.hypot(dx,dy)||1;
+      const baseEase=particleMode==='number'?.13:particleMode==='bless'?.15:.085;
+      const ease=1-Math.pow(1-baseEase,frameScale);
+      const curve=Math.min(2.4,dist*.006)*(particleMode==='number'?1:1.35)*frameScale;
+      p.vx=dx*ease-dy/dist*curve;p.vy=dy*ease+dx/dist*curve;
+      p.x+=p.vx;p.y+=p.vy;
+      if(dist<7){p.x+=Math.sin(p.phase)*.035;p.y+=Math.cos(p.phase*1.3)*.035}
+      p.alpha=Math.min(1,p.alpha+.03*frameScale);
+    }
+  }
+  function renderTextParticles(t){
+    if(!textParticles.length)return;
+    const pulse=.9+Math.sin(t*.003)*.1;
+    const numGlow=particleMode==='number';
+    ctx.globalCompositeOperation='lighter';
+    ctx.shadowBlur=0;ctx.globalAlpha=pulse;
+    for(const color of particlePalette){
+      ctx.fillStyle=color;ctx.beginPath();let has=false;
+      for(let i=0;i<textParticles.length;i++){
+        const p=textParticles[i];if(p.color!==color||p.alpha<.99)continue;
+        const radius=p.size*(numGlow?particleIntensity:1)*(.84+.16*Math.sin(p.phase+t*.002));
+        ctx.moveTo(p.x+radius,p.y);ctx.arc(p.x,p.y,radius,0,Math.PI*2);has=true;
+      }
+      if(has)ctx.fill();
+    }
+    // 由暗到亮：未完全成形的粒子按透明度分档批量绘制（性能友好）
+    const bins=[.18,.42,.66,.88];
+    for(const color of particlePalette){
+      for(let b=0;b<bins.length;b++){
+        ctx.beginPath();let has=false;
+        for(let i=0;i<textParticles.length;i++){
+          const p=textParticles[i];if(p.color!==color||p.alpha>=.99)continue;
+          const bin=Math.min(bins.length-1,Math.floor(p.alpha*bins.length));
+          if(bin!==b)continue;
+          const radius=p.size*(numGlow?particleIntensity:1)*(.84+.16*Math.sin(p.phase+t*.002));
+          ctx.moveTo(p.x+radius,p.y);ctx.arc(p.x,p.y,radius,0,Math.PI*2);has=true;
+        }
+        if(has){ctx.globalAlpha=pulse*bins[b];ctx.fillStyle=color;ctx.fill()}
+      }
+    }
+    // 柔和金色光晕
+    ctx.globalAlpha=.82;
+    const glowStep=numGlow?14:18;
+    for(let i=0;i<textParticles.length;i+=glowStep){
+      const p=textParticles[i];if(p.alpha<.6)continue;
+      ctx.fillStyle=numGlow?C.gold:p.color;ctx.shadowColor=numGlow?C.gold:p.color;
+      ctx.shadowBlur=numGlow?14*particleIntensity*(particleNumber<=3?1.5:1):10;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.size*1.8,0,Math.PI*2);ctx.fill();
+    }
+    ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
+    if(particleMode==='number'&&particleNumber<=3){
+      ctx.strokeStyle=`rgba(246,213,138,${.16+(4-particleNumber)*.1})`;ctx.lineWidth=1.5;
+      for(let ring=0;ring<2;ring++){ctx.beginPath();ctx.ellipse(w*.5,h*.48,Math.min(w*.23,220)+ring*25,Math.min(h*.28,180)+ring*18,Math.sin(t*.0005+ring)*.25,0,Math.PI*2);ctx.stroke()}
+    }
+  }
+
+  function starRadius(theta){
+    const seg=Math.PI/5,R=1,r=.45;
+    const a=((theta%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+    const idx=Math.floor(a/seg),t=(a-idx*seg)/seg;
+    const r0=idx%2===0?R:r, r1=(idx+1)%2===0?R:r;
+    return r0+(r1-r0)*t;
+  }
+  function ensureSfx(){
+    if(sfxCtx)return sfxCtx;
+    try{sfxCtx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){return null}
+    return sfxCtx;
+  }
+  function getNoiseBuffer(){
+    if(noiseBuffer)return noiseBuffer;
+    const ctx=sfxCtx;if(!ctx)return null;
+    const len=Math.floor(ctx.sampleRate*.4);
+    noiseBuffer=ctx.createBuffer(1,len,ctx.sampleRate);
+    const d=noiseBuffer.getChannelData(0);
+    for(let i=0;i<len;i++)d[i]=Math.random()*2-1;
+    return noiseBuffer;
+  }
+  function playBoom(x,y,power=1){
+    if(reduced||!sfxReady||!sfxCtx)return;
+    if(sfxCtx.state==='suspended')sfxCtx.resume();
+    const t=sfxCtx.currentTime;
+    const vol=Math.min(1.3,power);
+    const panVal=Math.max(-.85,Math.min(.85,(x/w)*2-1));
+    const pan=sfxCtx.createStereoPanner?sfxCtx.createStereoPanner():null;
+    const osc=sfxCtx.createOscillator(),og=sfxCtx.createGain();
+    osc.type='sine';
+    osc.frequency.setValueAtTime(120+Math.random()*50,t);
+    osc.frequency.exponentialRampToValueAtTime(36,t+.3);
+    og.gain.setValueAtTime(.0001,t);
+    og.gain.exponentialRampToValueAtTime(.5*vol,t+.015);
+    og.gain.exponentialRampToValueAtTime(.0001,t+.34);
+    const buf=getNoiseBuffer();
+    const ns=sfxCtx.createBufferSource(),nf=sfxCtx.createBiquadFilter(),ng=sfxCtx.createGain();
+    ns.buffer=buf;nf.type='lowpass';nf.frequency.setValueAtTime(2200,t);nf.frequency.exponentialRampToValueAtTime(300,t+.16);
+    ng.gain.setValueAtTime(.0001,t);
+    ng.gain.exponentialRampToValueAtTime(.32*vol,t+.006);
+    ng.gain.exponentialRampToValueAtTime(.0001,t+.2);
+    osc.connect(og);ns.connect(nf);nf.connect(ng);
+    if(pan){og.connect(pan);ng.connect(pan);pan.pan.value=panVal;pan.connect(sfxCtx.destination)}
+    else{og.connect(sfxCtx.destination);ng.connect(sfxCtx.destination)}
+    osc.start(t);osc.stop(t+.36);ns.start(t);ns.stop(t+.22);
+  }
+  // 协调的烟花调色方案：每颗烟花有明确主色与辅助色
+  const FW_SCHEMES={
+    gold:{colors:[[44,85,70],[48,45,93],[44,92,79]],accent:48,mode:'main'},       // 香槟金 + 暖白（柳树/压轴）
+    aurora:{colors:[[262,82,66],[292,78,70],[252,52,86]],accent:292,mode:'alt'},  // 极光紫 + 玫紫粉（球形）
+    glacier:{colors:[[186,72,62],[194,32,93],[185,84,72]],accent:194,mode:'alt'}, // 冰川青 + 星光白（环形）
+    royal:{colors:[[256,80,64],[44,88,72],[268,86,68],[48,45,93]],accent:44,mode:'alt'},// 紫蓝 + 香槟金（双层）
+    grand:{colors:[[44,88,72],[48,45,95],[262,80,68],[186,76,66]],accent:262,mode:'cycle'}// 金+紫+青（多层）
+  };
+  const SHAPE_SCHEME={willow:'gold',palm:'gold',peony:'aurora',chrysanthemum:'aurora',heart:'aurora',star:'aurora',ring:'glacier',scatter:'glacier',double:'royal',crossette:'royal',rainbow:'grand'};
+  function schemeFor(shape){return FW_SCHEMES[SHAPE_SCHEME[shape]]||FW_SCHEMES.gold}
+  function schemeColor(scheme,i,count){
+    const cs=scheme.colors;let idx;
+    if(scheme.mode==='cycle')idx=Math.floor(i/Math.max(1,count)*cs.length)%cs.length;
+    else if(scheme.mode==='alt')idx=i%cs.length;
+    else idx=(i%13===0&&cs.length>2)?2:(i%7===0&&cs.length>1?1:0);
+    const c=cs[idx];
+    return {hue:c[0],sat:c[1],light:c[2],trailHue:scheme.accent};
+  }
+  function burst(x,y,power=1,shape='ring',schemeName){
+    const scheme=FW_SCHEMES[schemeName]||schemeFor(shape);
+    const main=schemeColor(scheme,0,1);
+    flashes.push({x,y,life:0,max:32,power,hue:main.hue,sat:main.sat,light:main.light});
+    playBoom(x,y,power);
+    if(shape==='crossette'){
+      const n=Math.floor((13+Math.random()*8)*power);
+      for(let i=0;i<n;i++){
+        const a=i/n*Math.PI*2+(Math.random()-.5)*.32;
+        const v=2.6+Math.random()*1.9;
+        const c=schemeColor(scheme,i,n);
+        particles.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:0,max:50+Math.random()*12,size:2.6+Math.random()*1.6,hue:c.hue,sat:c.sat,light:c.light,trailHue:c.trailHue,
+          alpha:1,drag:.992,gravity:.02,glow:true,scale:1,trail:14,phase:Math.random()*6.28,type:'crossette',splitAt:18+Math.floor(Math.random()*9)});
+      }
+    }else if(shape==='rainbow'){
+      // 彩虹环形：整圈分色 + 长拖丝（拉长 history 轨迹，靠重力自然垂落）
+      const dense=w<620?88:150;
+      const n=Math.floor(dense*power);
+      const spin=Math.random()*Math.PI*2;
+      for(let i=0;i<n;i++){
+        const t=i/n*Math.PI*2;
+        const a=t+spin;
+        const v=(3.05+Math.random()*.5)*power;
+        const hue=Math.round(t*180/Math.PI)%360;
+        particles.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,
+          life:0,max:150+Math.random()*70,size:1.15+Math.random()*.5,
+          hue,sat:100,light:63,trailHue:hue,alpha:1,
+          drag:.9946,gravity:.028,glow:false,scale:1,trail:999,phase:Math.random()*6.28,
+          hist:[],type:'rainbow'});
+      }
+      for(let i=0;i<Math.floor(28*power);i++){
+        const a=Math.random()*Math.PI*2,v=(1.2+Math.random()*.7)*power;
+        particles.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:0,max:70,size:1.25,
+          hue:45,sat:20,light:95,trailHue:45,alpha:1,drag:.988,gravity:.02,glow:true,scale:1,trail:10,phase:0,hist:[],type:'rainbowCore'});
+      }
+    }else{
+      const count=Math.floor(((shape==='willow'?150:shape==='peony'?190:shape==='palm'?115:shape==='chrysanthemum'?130:100)+Math.random()*56)*power);
+      for(let i=0;i<count;i++){
+        const t=i/count*Math.PI*2;
+        let angle,velocity;
+        if(shape==='heart'){angle=Math.atan2(Math.sin(t),Math.cos(t));velocity=1.6}
+        else if(shape==='star'){angle=t;velocity=1.1+starRadius(t)*2.7}
+        else if(shape==='willow'){angle=t;velocity=1.8+Math.random()*3.2}
+        else if(shape==='palm'){angle=t;velocity=2.7+Math.random()*2.3}
+        else if(shape==='scatter'){angle=Math.random()*Math.PI*2;velocity=1.5+Math.random()*4.8}
+        else if(shape==='chrysanthemum'){angle=t+(Math.random()-.5)*.13;velocity=3.2+Math.random()*2.5}
+        else {angle=t+(Math.random()-.5)*(shape==='peony'?.06:.045);velocity=shape==='peony'?3.7+Math.random()*1.9:1.5+Math.random()*4.8}
+        velocity*=power;
+        const c=schemeColor(scheme,i,count);
+        particles.push({x,y,vx:Math.cos(angle)*velocity,vy:Math.sin(angle)*velocity,
+          life:0,max:(shape==='willow'?105:shape==='palm'?90:68)+Math.random()*(shape==='willow'?65:shape==='palm'?40:48),size:Math.random()*2.2+1,hue:c.hue,sat:c.sat,light:c.light,trailHue:c.trailHue,
+          alpha:1,drag:shape==='willow'?.991:shape==='palm'?.985:.983+Math.random()*.011,gravity:shape==='willow'?.045:shape==='palm'?.04:.027,
+          glow:Math.random()>.38,scale:shape==='heart'?(.65+Math.sin(t)*.3):1,trail:shape==='willow'?36:18,phase:Math.random()*6.28});
+      }
+    }
+    const gCount=Math.floor((9+Math.random()*12)*power);
+    for(let i=0;i<gCount;i++){
+      const a=Math.random()*Math.PI*2,s=1+Math.random()*3.6;
+      glitters.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-1.6,life:0,max:60+Math.random()*55,size:.7+Math.random()*1.5,phase:Math.random()*6.28});
+    }
+    if(shape==='double') setTimeout(()=>burst(x,y,power*.62,'ring','gold'),120);
+    const maxParticles=w<600?4200:7600;
+    if(particles.length>maxParticles)particles.splice(0,particles.length-maxParticles);
+    if(glitters.length>maxParticles)glitters.splice(0,glitters.length-maxParticles);
+  }
+  function launch(x,y,power=1,shape){
+    const pool=['rainbow','rainbow','rainbow','ring','chrysanthemum','willow','peony','palm','star','double','crossette'];
+    const chosen=shape||pool[Math.floor(Math.random()*pool.length)];
+    const c=schemeColor(schemeFor(chosen),0,1);
+    rockets.push({x,y:h+12,targetY:y,vy:-(5.5+Math.random()*2.2)*power,life:0,hue:c.hue,sat:c.sat,light:c.light,power,shape:chosen});
+  }
+  function frame(t){
+    ctx.clearRect(0,0,w,h);
+    for(const s of stars){
+      s.p+=s.s;const a=s.a*(.65+.35*Math.sin(s.p));
+      ctx.globalAlpha=a;ctx.fillStyle='#E4ECFF';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+    }
+    ctx.globalAlpha=1;
+    for(let i=flashes.length-1;i>=0;i--){
+      const f=flashes[i];f.life++;
+      const k=f.life/f.max;
+      if(k>=1){flashes.splice(i,1);continue}
+      const rad=(6+72*Math.pow(k,.6))*f.power;
+      const g=ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,rad);
+      g.addColorStop(0,`hsla(${f.hue},${Math.min(70,f.sat)}%,95%,${.8*(1-k)})`);
+      g.addColorStop(.35,`hsla(${f.hue},${f.sat}%,${f.light}%,${.4*(1-k)})`);
+      g.addColorStop(1,'hsla(0,0%,100%,0)');
+      ctx.globalCompositeOperation='lighter';ctx.globalAlpha=1;ctx.fillStyle=g;
+      ctx.beginPath();ctx.arc(f.x,f.y,rad,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=.38*(1-k);ctx.strokeStyle=`hsla(${f.hue},${f.sat}%,${Math.min(92,f.light+18)}%,1)`;ctx.lineWidth=2*(1-k);
+      ctx.beginPath();ctx.arc(f.x,f.y,rad*1.12,0,Math.PI*2);ctx.stroke();
+      ctx.globalCompositeOperation='source-over';
+    }
+    ctx.globalAlpha=1;
+    for(let i=rockets.length-1;i>=0;i--){
+      const r=rockets[i];r.life++;r.y+=r.vy;r.vy*=.99;
+      const tg=ctx.createLinearGradient(r.x,r.y,r.x,r.y+34);
+      tg.addColorStop(0,`hsla(${r.hue},${r.sat}%,${Math.min(90,r.light+14)}%,.9)`);tg.addColorStop(.45,`hsla(${r.hue},${r.sat}%,${r.light}%,.34)`);tg.addColorStop(1,'hsla(0,0%,0%,0)');
+      ctx.globalAlpha=1;ctx.strokeStyle=tg;ctx.lineWidth=2.6;
+      ctx.beginPath();ctx.moveTo(r.x,r.y);ctx.lineTo(r.x,r.y+34);ctx.stroke();
+      ctx.globalAlpha=.4;ctx.fillStyle=`hsl(${r.hue},${r.sat}%,${Math.min(94,r.light+22)}%)`;ctx.shadowBlur=20;ctx.shadowColor=`hsl(${r.hue},${Math.max(40,r.sat-10)}%,${Math.max(45,r.light-12)}%)`;
+      ctx.beginPath();ctx.arc(r.x,r.y,4.6,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=.95;ctx.fillStyle=`hsl(${r.hue},${r.sat}%,${Math.min(92,r.light+12)}%)`;ctx.shadowBlur=12;
+      ctx.beginPath();ctx.arc(r.x,r.y,2.4,0,Math.PI*2);ctx.fill();
+      if(r.y<=r.targetY){burst(r.x,r.y,r.power,r.shape);rockets.splice(i,1)}
+    }
+    for(let i=particles.length-1;i>=0;i--){
+      const p=particles[i];p.life++;p.x+=p.vx;p.y+=p.vy;p.vx*=p.drag;p.vy=p.vy*p.drag+p.gravity;
+      if(p.type==='crossette'&&p.life>=p.splitAt){
+        const pieces=4+Math.floor(Math.random()*2);
+        const baseA=Math.random()*Math.PI*2;
+        for(let j=0;j<pieces;j++){
+          const a=baseA+j*Math.PI*2/pieces+(Math.random()-.5)*.5;
+          const v=2.4+Math.random()*2.6;
+          particles.push({x:p.x,y:p.y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:0,max:28+Math.random()*26,size:1.2+Math.random()*1.6,hue:p.hue,sat:p.sat,light:p.light,trailHue:p.trailHue,
+            alpha:1,drag:.97,gravity:.03,glow:true,scale:1,trail:10,phase:Math.random()*6.28});
+        }
+        flashes.push({x:p.x,y:p.y,life:0,max:16,power:.5,hue:p.hue,sat:p.sat,light:p.light});
+        playBoom(p.x,p.y,.6);
+        particles.splice(i,1);continue;
+      }
+      const lr=p.life/p.max;
+      p.alpha=Math.max(0,1-lr);
+      if(p.type==='rainbow'){
+        p.hist.push(p.x,p.y);
+        if(p.hist.length>76)p.hist.splice(0,p.hist.length-76);
+        if(p.hist.length>=6){
+          ctx.shadowBlur=0;
+          ctx.globalAlpha=Math.min(1,p.alpha*1.2);
+          ctx.strokeStyle=`hsla(${p.hue},100%,${Math.min(76,p.light+4)}%,1)`;
+          ctx.lineWidth=p.size*.8;
+          ctx.beginPath();
+          ctx.moveTo(p.hist[0],p.hist[1]);
+          for(let k=2;k<p.hist.length;k+=2)ctx.lineTo(p.hist[k],p.hist[k+1]);
+          ctx.stroke();
+        }
+        ctx.globalAlpha=p.alpha;
+        ctx.fillStyle=`hsla(${p.hue},100%,${Math.min(96,p.light+16)}%,1)`;
+        ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();
+        if(p.life>=p.max)particles.splice(i,1);
+        continue;
+      }
+      const tw=p.glow?0.72+0.28*Math.sin(p.life*.35+p.phase):1;
+      ctx.globalAlpha=p.alpha*tw;ctx.fillStyle=`hsla(${p.hue},${p.sat}%,${p.glow?Math.min(96,p.light+12):p.light}%,1)`;
+      if(p.glow){ctx.shadowBlur=14;ctx.shadowColor=`hsl(${p.hue},${Math.max(40,p.sat-10)}%,${Math.max(45,p.light-12)}%)`}else ctx.shadowBlur=0;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.size*(1-lr*.45)*p.scale,0,Math.PI*2);ctx.fill();
+      if(p.life<p.trail){
+        const tx=p.x-p.vx*4.2,ty=p.y-p.vy*4.2;
+        const grad=ctx.createLinearGradient(p.x,p.y,tx,ty);
+        grad.addColorStop(0,`hsla(${p.hue},${p.sat}%,${Math.min(95,p.light+15)}%,${p.alpha*.55})`);
+        grad.addColorStop(.55,`hsla(${p.trailHue},${Math.min(80,p.sat*.8)}%,${Math.min(92,p.light+8)}%,${p.alpha*.24})`);
+        grad.addColorStop(1,'hsla(0,0%,100%,0)');
+        ctx.globalAlpha=1;ctx.strokeStyle=grad;ctx.lineWidth=p.size*.85;
+        ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(tx,ty);ctx.stroke();
+      }
+      if(p.life>=p.max)particles.splice(i,1);
+    }
+    for(let i=glitters.length-1;i>=0;i--){
+      const g=glitters[i];g.life++;g.x+=g.vx;g.y+=g.vy;g.vx*=.985;g.vy=g.vy*.985+.025;g.phase+=.18;
+      if(g.life>=g.max){glitters.splice(i,1);continue}
+      const a=Math.max(0,1-g.life/g.max)*(0.55+0.45*Math.sin(g.phase));
+      ctx.globalAlpha=a;ctx.fillStyle='#F6D58A';ctx.shadowBlur=6;ctx.shadowColor='#F6D58A';
+      ctx.beginPath();ctx.arc(g.x,g.y,g.size,0,Math.PI*2);ctx.fill();
+    }
+    updateTextParticles(t);
+    if(particleMode==='bless'){updateBless(t);renderBless(t);}
+    else renderTextParticles(t);
+    ctx.globalAlpha=1;ctx.shadowBlur=0;
+    const autoDelay=particleMode==='number'?Math.max(240,760-(10-particleNumber)*60):particleMode==='greeting'?1050:620;
+    if(!reduced && t-lastAuto>autoDelay && Math.random()>.18){launch(w*(.1+Math.random()*.8),h*(.1+Math.random()*.45),particleMode==='number'?.95:particleMode==='greeting'?.6:.95);lastAuto=t}
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  window.addEventListener('pointerdown',e=>{
+    if(e.target.closest('button,.panel,textarea'))return;
+    launch(e.clientX,e.clientY,1);
+  });
+  window.addEventListener('pointerdown',()=>{
+    if(sfxReady)return;
+    const c=ensureSfx();
+    if(c){sfxReady=true;c.resume().catch(()=>{})}
+  },{capture:true});
+  window.addEventListener('pointermove',e=>{const glow=document.querySelector('.parallax-glow');if(glow)glow.style.transform=`translate(${(e.clientX/w-.5)*22}px,${(e.clientY/h-.5)*18}px)`});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)lastAuto=performance.now()});
+
+  // Automatically counts down to the next January 1 in the visitor's local time.
+  function nextNewYear(now=new Date()){
+    let year=now.getFullYear();
+    let target=new Date(year+1,0,1,0,0,0,0);
+    return target;
+  }
+  let target=nextNewYear(), finaleStarted=false, finaleDone=false;
+  function pad(n){return String(n).padStart(2,'0')}
+  function startNewYearCelebration(){
+    if(finaleDone)return;
+    finaleDone=true;
+    $('celebrationFlash').classList.remove('show');void $('celebrationFlash').offsetWidth;$('celebrationFlash').classList.add('show');
+    $('finalCount').classList.remove('show');
+    explodeCountdownParticles();
+    $('status').textContent='新年快乐！新的篇章已经开启。';
+    const bursts=[[.5,.26,1.8,'rainbow'],[.2,.36,1.35,'willow'],[.8,.34,1.35,'willow'],[.34,.52,1.35,'rainbow'],[.66,.52,1.2,'double']];
+    bursts.forEach((b,i)=>setTimeout(()=>burst(w*b[0],h*b[1],b[2],b[3]),i*180));
+    startFinaleFireworks();
+    setTimeout(startBlessingShow,1500);
+    setTimeout(()=>{target=nextNewYear();finaleStarted=false;finaleDone=false;},8000);
+  }
+  function startFinaleFireworks(){
+    clearInterval(finaleFireworkTimer);const started=performance.now();let sequence=0;
+    // 编队式压轴：单发、慢节奏、左右交替构图，避免多颗烟花挤在一起
+    const shapes=['willow','chrysanthemum','ring','peony','rainbow','double','palm','star','crossette','chrysanthemum'];
+    const lanes=[.18,.5,.82,.32,.68];
+    const fire=()=>{
+      if(performance.now()-started>4200){clearInterval(finaleFireworkTimer);finaleFireworkTimer=null;return}
+      const lane=lanes[sequence%lanes.length]+(Math.random()-.5)*.05;
+      const x=w*lane,y=h*(.16+Math.random()*.36);
+      burst(x,y,w<600?.9:1.15,shapes[sequence%shapes.length]);
+      sequence++;
+    };
+    fire();finaleFireworkTimer=setInterval(fire,w<600?340:300);
+  }
+  const celebrateMidnight=startNewYearCelebration;
+  function startCountdownShow(){
+    finaleStarted=true;document.body.classList.add('showtime');$('finalCount').classList.add('show');
+  }
+  function updateClock(){
+    const now=new Date();
+    let diff=target-now;
+    if(diff<=10000 && diff>0 && !finaleStarted){
+      startCountdownShow();
+      let last=-1;
+      const tick=()=>{
+        const remain=Math.max(0,target-Date.now());
+        const n=Math.ceil(remain/1000);
+        if(n!==last && n>0){last=n;transitionToNumber(n);if(n<=5)launch(w*(.18+Math.random()*.64),h*(.14+Math.random()*.27),n<=3?1:.7)}
+        if(remain<=0){celebrateMidnight();return}
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+    if(diff<=0){
+      if(!finaleStarted){finaleStarted=true;celebrateMidnight()}
+      diff=0;
+    }
+    const total=Math.floor(Math.max(0,diff)/1000);
+    $('days').textContent=String(Math.floor(total/86400)).padStart(3,'0');
+    $('hours').textContent=pad(Math.floor(total%86400/3600));
+    $('minutes').textContent=pad(Math.floor(total%3600/60));
+    $('seconds').textContent=pad(total%60);
+    $('yearTitle').textContent=target.getFullYear();
+    $('footerYear').textContent=target.getFullYear();
+    $('countLabel').textContent='距离 '+target.getFullYear()+' 年新年启程还有';
+    if(!finaleStarted)$('status').textContent='愿每一份努力，都在未来闪闪发光。';
+  }
+  updateClock();setInterval(updateClock,200);
+  // ---------- 六幕祝福：白色粒子文字 + 逐字浮现 + 白光扫过 ----------
+  var blessOn=false,blessAct=0,blessTotal=0,blessChars=0,blessTyped=0;
+  var blessPhase='idle',blessNextAt=0,blessHoldUntil=0,blessShineAt=0,blessShineX=0,blessFade=1,blessOutAt=0,blessFs=120;
+
+  function blessYear(){
+    const t=new Date(target);
+    if(t.getMonth()===0 && t.getDate()===1) return t.getFullYear();
+    return new Date().getFullYear()+1;
+  }
+  function blessLines(){
+    const y=blessYear();
+    return ['祝你新年快乐','祝你身体健康','祝你万事顺意','祝你天天开心','祝你心想事成','祝你'+y+'一切顺利'];
+  }
+  // 把一行字采样成白色粒子（按字符切分，供逐字揭示）
+  function blessPoints(text){
+    textCanvas.width=w;textCanvas.height=h;textCtx.clearRect(0,0,w,h);
+    const fs=Math.max(32,Math.min(w*.96/text.length,h*.32,280));
+    blessFs=fs;
+    textCtx.fillStyle='#fff';textCtx.textAlign='center';textCtx.textBaseline='middle';
+    textCtx.font='300 '+fs+'px "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif';
+    textCtx.fillText(text,w*.5,h*.5);
+
+    const widths=[];let total=0;
+    for(const ch of text){const wd=textCtx.measureText(ch).width;widths.push(wd);total+=wd;}
+    const bounds=[];let acc=w*.5-total/2;
+    for(const wd of widths){bounds.push([acc,acc+wd]);acc+=wd;}
+
+    const step=1;
+    const data=textCtx.getImageData(0,0,w,h).data;
+    const pts=[];
+    const y0=Math.max(0,Math.floor(h*.5-fs*.82)),y1=Math.min(h,Math.ceil(h*.5+fs*.82));
+    for(let y=y0;y<y1;y+=step){
+      for(let x=0;x<w;x+=step){
+        if(data[(y*w+x)*4+3]>128){
+          let ci=0;
+          while(ci<bounds.length-1 && x>bounds[ci][1]) ci++;
+          pts.push({x:x,y:y,char:ci});
+        }
+      }
+    }
+    const cap=w<620?3600:7200;
+    if(pts.length<=cap)return pts;
+    const out=[],stride=pts.length/cap;
+    for(let i=0;i<cap;i++)out.push(pts[Math.floor(i*stride)]);
+    return out;
+  }
+  function startBlessAct(){
+    const texts=blessLines();
+    if(blessAct>=texts.length){
+      blessPhase='idle';blessOn=false;particleMode='idle';textParticles.length=0;clearWords();return;
+    }
+    const text=texts[blessAct];
+    blessChars=text.length;blessTyped=0;
+    const pts=blessPoints(text);
+    textParticles.length=0;
+    const cx=w*.5,cy=h*.5;
+    for(const p of pts){
+      const a=Math.random()*Math.PI*2,r=Math.min(w,h)*(.22+Math.random()*.34);
+      textParticles.push({
+        x:cx+Math.cos(a)*r,y:cy+Math.sin(a)*r,
+        vx:Math.cos(a)*.5,vy:Math.sin(a)*.5,
+        tx:p.x,ty:p.y,char:p.char,
+        size:1.25+Math.random()*1.55,color:'#FFFFFF',
+        phase:Math.random()*6.28,startAt:Infinity,alpha:0,hidden:true
+      });
+    }
+    particleMode='bless';
+    blessPhase='type';blessFade=1;
+    blessNextAt=performance.now()+240;
+  }
+  function revealBlessChar(ci){
+    const now=performance.now();
+    let sx=0,n=0;
+    for(const p of textParticles){
+      if(p.char!==ci)continue;
+      p.hidden=false;p.startAt=now+Math.random()*90;p.alpha=.2;
+      sx+=p.tx;n++;
+    }
+    if(n)sparkRing(sx/n,h*.5,24,10);
+  }
+  function updateBless(t){
+    if(blessPhase==='type'){
+      if(t>=blessNextAt){
+        if(blessTyped<blessChars){revealBlessChar(blessTyped);blessTyped++;}
+        blessNextAt=t+175;
+        if(blessTyped>=blessChars){
+          blessPhase='hold';blessShineAt=t+180;
+          blessHoldUntil=t+(blessAct===blessTotal-1?4200:2600);
+        }
+      }
+    }else if(blessPhase==='hold'){
+      const k=Math.min(1,Math.max(0,(t-blessShineAt)/1300));
+      blessShineX=-w*.1+k*w*1.2;
+      if(t>=blessHoldUntil){blessPhase='out';blessOutAt=t;}
+    }else if(blessPhase==='out'){
+      blessFade=Math.max(0,1-(t-blessOutAt)/820);
+      if(t-blessOutAt>820){blessAct++;startBlessAct();}
+    }
+  }
+  function clearWords(){wctx.clearRect(0,0,w,h);}
+  function renderBless(t){
+    wctx.clearRect(0,0,w,h);
+    if(!textParticles.length)return;
+    const shining=blessPhase==='hold'||blessPhase==='out';
+
+    // 暗色遮罩：把身后的烟花压下去，保证粒子文字能看清
+    const rx=Math.max(w*.52,420),ry=Math.max(blessFs*1.5,160);
+    wctx.save();
+    wctx.translate(w*.5,h*.5);
+    wctx.scale(1,ry/rx);
+    const mg=wctx.createRadialGradient(0,0,0,0,0,rx);
+    mg.addColorStop(0,'rgba(3,5,16,.90)');
+    mg.addColorStop(.55,'rgba(3,5,16,.78)');
+    mg.addColorStop(1,'rgba(3,5,16,0)');
+    wctx.globalAlpha=Math.max(0,blessFade);
+    wctx.fillStyle=mg;
+    wctx.fillRect(-rx*2,-rx*2,rx*4,rx*4);
+    wctx.restore();
+
+    wctx.globalCompositeOperation='lighter';
+    // 按透明度分档批量描点：7000+ 粒子也只有 5 次 fill，不会掉帧
+    wctx.fillStyle='#FFFFFF';
+    const BINS=5;
+    for(let b=0;b<BINS;b++){
+      wctx.beginPath();
+      let any=false;
+      for(const p of textParticles){
+        if(p.hidden)continue;
+        const a=Math.min(1,p.alpha*blessFade);
+        if(Math.min(BINS-1,Math.floor(a*BINS))!==b)continue;
+        wctx.moveTo(p.x+p.size,p.y);
+        wctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+        any=true;
+      }
+      if(any){wctx.globalAlpha=(b+1)/BINS;wctx.fill();}
+    }
+    // 扫光高光：只处理光带内的粒子
+    if(shining){
+      for(const p of textParticles){
+        if(p.hidden)continue;
+        const d=(p.x-blessShineX)/90;
+        const band=Math.exp(-d*d);
+        if(band<.25)continue;
+        wctx.globalAlpha=Math.min(1,band*.85);
+        wctx.beginPath();wctx.arc(p.x,p.y,p.size*3.4,0,Math.PI*2);wctx.fill();
+      }
+    }
+    wctx.globalAlpha=1;wctx.globalCompositeOperation='source-over';
+  }
+  function startBlessingShow(){
+    if(blessOn)return;
+    blessOn=true;blessAct=0;
+    blessTotal=blessLines().length;
+    document.body.classList.add('showtime');
+    startBlessAct();
+  }
+
+  window.__newYearShow={
+    start(seconds=10){target=new Date(Date.now()+seconds*1000);finaleStarted=false;finaleDone=false;particleMode='idle';textParticles.length=0;blessOn=false;blessPhase='idle';blessAct=0;clearWords();updateClock()},
+    showNumber(number){document.body.classList.add('showtime');transitionToNumber(number)},
+    formGreetingText(){document.body.classList.add('showtime','celebrating');formGreetingText()},
+    explodeCountdownParticles,startFinaleFireworks,startBlessing:startBlessingShow,
+    debug(){const p=textParticles[0];return {mode:particleMode,count:textParticles.length,now:performance.now(),sample:p&&{x:p.x,y:p.y,tx:p.tx,ty:p.ty,vx:p.vx,vy:p.vy,startAt:p.startAt}}}
+  };
+  if(new URLSearchParams(location.search).has('demo'))window.__newYearShow.start(10);
+
+  const modal=$('wishModal');
+  $('wishBtn').addEventListener('click',()=>{modal.classList.add('show');$('wishText').focus()});
+  try{const savedWish=localStorage.getItem('starlight-new-year-wish');if(savedWish)$('wishText').value=savedWish}catch(e){}
+  function closeModal(){modal.classList.remove('show')}
+  $('closeModal').addEventListener('click',closeModal);
+  $('closeWishResult').addEventListener('click',closeModal);
+  modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+  $('saveWish').addEventListener('click',()=>{
+    const wish=$('wishText').value.trim();
+    if(!wish){showToast('先写下一句愿望吧 ✦');$('wishText').focus();return}
+    try{localStorage.setItem('starlight-new-year-wish',wish)}catch(e){}
+    $('wishEcho').textContent=wish;
+    $('wishForm').style.display='none';$('wishResult').style.display='block';
+    launch(w*.5,h*.38,1.3);showToast('愿望已被星光收藏');
+  });
+  $('fireBtn').addEventListener('click',()=>{launch(w*(.25+Math.random()*.5),h*(.2+Math.random()*.38),1.25);showToast('为你点亮一场烟花 ✧')});
+
+  let toastTimer;
+  function showToast(message){
+    const el=$('toast');el.textContent=message;el.classList.add('show');
+    clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2200);
+  }
+  /* ---------- 分享：生成图片卡（微信里靠保存图片转发） ---------- */
+  let shareImgUrl='';
+
+  function shareCopyText(){
+    const y=blessYear();
+    const lines=['祝你新年快乐','祝你身体健康','祝你万事顺意','祝你天天开心','祝你心想事成','祝你'+y+'一切顺利'];
+    const url=location.protocol.startsWith('http')?location.href:'';
+    return '送你一份星际新年祝福：\n'+lines.join('，')+'。'+(url?'\n'+url:'');
+  }
+
+  function buildShareCard(name){
+    const W=1080,H=1350,y=blessYear();
+    const c=document.createElement('canvas');c.width=W;c.height=H;
+    const g=c.getContext('2d');
+
+    const bg=g.createLinearGradient(0,0,W*.55,H);
+    bg.addColorStop(0,'#070A1A');bg.addColorStop(.52,'#0C1130');bg.addColorStop(1,'#150D28');
+    g.fillStyle=bg;g.fillRect(0,0,W,H);
+
+    const glow=g.createRadialGradient(W*.5,H*.16,0,W*.5,H*.16,W*.8);
+    glow.addColorStop(0,'rgba(139,92,246,.34)');
+    glow.addColorStop(.42,'rgba(54,217,232,.10)');
+    glow.addColorStop(1,'rgba(0,0,0,0)');
+    g.fillStyle=glow;g.fillRect(0,0,W,H);
+
+    for(let i=0;i<340;i++){
+      const x=Math.random()*W,r=Math.random()*1.7+.3;
+      g.globalAlpha=.12+Math.random()*.8;
+      g.fillStyle=Math.random()<.2?'#C7B9FF':(Math.random()<.5?'#F6D58A':'#EAF2FF');
+      g.beginPath();g.arc(x,Math.random()*H,r,0,Math.PI*2);g.fill();
+    }
+    g.globalAlpha=1;
+
+    g.strokeStyle='rgba(246,213,138,.20)';g.lineWidth=2;g.strokeRect(40,40,W-80,H-80);
+    g.textAlign='center';g.textBaseline='middle';
+
+    g.fillStyle='rgba(169,177,218,.78)';
+    g.font='500 24px "PingFang SC","Microsoft YaHei",sans-serif';
+    g.fillText('I N T E R S T E L L A R   N E W   Y E A R',W/2,128);
+
+    g.fillStyle='#F5F3EF';
+    g.font='800 86px "PingFang SC","Microsoft YaHei",sans-serif';
+    g.fillText('新年快乐',W/2,258);
+
+    const yg=g.createLinearGradient(W*.2,350,W*.8,540);
+    yg.addColorStop(0,'#FFF6DE');yg.addColorStop(.45,'#F6D58A');yg.addColorStop(1,'#C7B9FF');
+    g.fillStyle=yg;
+    g.font='200 196px "PingFang SC","Microsoft YaHei",sans-serif';
+    g.fillText(String(y),W/2,432);
+
+    g.strokeStyle='rgba(246,213,138,.22)';g.lineWidth=1;
+    g.beginPath();g.moveTo(W*.28,536);g.lineTo(W*.72,536);g.stroke();
+
+    g.fillStyle='rgba(230,226,255,.94)';
+    g.font='400 42px "PingFang SC","Microsoft YaHei",sans-serif';
+    ['祝你新年快乐','祝你身体健康','祝你万事顺意','祝你天天开心','祝你心想事成','祝你'+y+'一切顺利']
+      .forEach((t,i)=>g.fillText(t,W/2,626+i*72));
+
+    g.fillStyle='rgba(199,185,255,.85)';
+    g.font='400 30px "PingFang SC","Microsoft YaHei",sans-serif';
+    g.fillText(name?('送给 '+name):'送给每一个奔赴新程的你',W/2,H-196);
+
+    g.fillStyle='rgba(124,132,178,.8)';
+    g.font='400 24px "PingFang SC","Microsoft YaHei",sans-serif';
+    g.fillText('把遗憾留在星河，把热爱带进新年',W/2,H-138);
+
+    return c.toDataURL('image/png');
+  }
+
+  function downloadDataUrl(url,filename){
+    const a=document.createElement('a');
+    a.href=url;a.download=filename;
+    document.body.appendChild(a);a.click();a.remove();
+  }
+
+  function openShare(){
+    shareImgUrl=buildShareCard('');
+    $('shareImg').src=shareImgUrl;
+    $('shareTip').textContent=location.protocol.startsWith('http')
+      ? '微信里不能直接分享链接：保存图片发给好友，或复制下面的文案。'
+      : '当前是本地文件：先保存图片，再在微信里发给好友（长按图片也能存）。';
+    $('shareModal').classList.add('show');
+  }
+
+  $('shareBtn').addEventListener('click',openShare);
+  $('closeShare').addEventListener('click',()=>$('shareModal').classList.remove('show'));
+  $('shareModal').addEventListener('click',e=>{if(e.target===$('shareModal'))$('shareModal').classList.remove('show')});
+
+  $('saveShareImg').addEventListener('click',()=>{
+    if(!shareImgUrl)shareImgUrl=buildShareCard('');
+    downloadDataUrl(shareImgUrl,'星际新年-'+blessYear()+'.png');
+    showToast('图片已保存，去微信发送吧');
+  });
+
+  $('copyShareText').addEventListener('click',async()=>{
+    try{
+      await navigator.clipboard.writeText(shareCopyText());
+      showToast('文案已复制，粘到微信里即可');
+    }catch(e){showToast('长按上方图片保存，或手动复制文案');}
+  });
+
+  $('sysShare').addEventListener('click',async()=>{
+    if(!navigator.share){showToast('当前环境不支持系统分享，请用「保存图片」');return}
+    try{
+      if(!shareImgUrl)shareImgUrl=buildShareCard('');
+      const blob=await (await fetch(shareImgUrl)).blob();
+      const file=new File([blob],'星际新年-'+blessYear()+'.png',{type:'image/png'});
+      if(navigator.canShare&&navigator.canShare({files:[file]})){
+        await navigator.share({files:[file],title:'星际新年',text:shareCopyText()});
+      }else{
+        await navigator.share({title:'星际新年',text:shareCopyText(),url:location.protocol.startsWith('http')?location.href:undefined});
+      }
+    }catch(e){if(e.name!=='AbortError')showToast('分享未完成，请用「保存图片」');}
+  });
+
+  const cardModal=$('cardModal');
+  $('cardBtn').addEventListener('click',()=>cardModal.classList.add('show'));
+  $('closeCard').addEventListener('click',()=>cardModal.classList.remove('show'));
+  cardModal.addEventListener('click',e=>{if(e.target===cardModal)cardModal.classList.remove('show')});
+  $('makeCard').addEventListener('click',()=>{
+    const name=$('friendName').value.trim()||'亲爱的朋友';
+    $('cardGreeting').textContent=name+'，新年快乐！';
+    $('cardPreview').style.display='block';$('shareCard').style.display='block';
+    launch(w*.5,h*.36,1.05);
+  });
+  $('shareCard').addEventListener('click',async()=>{
+    const name=$('friendName').value.trim()||'亲爱的朋友';
+    const message=`${name}，新年快乐！愿新的一年，心中有光，脚下有路。所遇皆温柔，所行皆坦途。`;
+    try{
+      if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(message+' '+location.href);showToast('专属祝福和网页链接已复制')}
+      else if(navigator.share)await navigator.share({title:'送你一份星际新年祝福',text:message,url:location.href});
+      else showToast(message);
+    }catch(e){if(e.name!=='AbortError')showToast('祝福卡已生成，可以截图分享给朋友')}
+  });
+
+  $('saveCardImg').addEventListener('click',()=>{
+    const name=$('friendName').value.trim();
+    downloadDataUrl(buildShareCard(name),'星际新年祝福-'+blessYear()+'.png');
+    showToast('祝福卡已保存，发给 TA 吧');
+  });
+
+  // A gentle synthesized ambient loop: no external audio file required.
+  let audioCtx=null,master=null,musicOn=false,musicTimer=null,noteIndex=0;
+  const notes=[220,261.63,329.63,392,329.63,261.63,196,246.94];
+  function playNote(){
+    if(!audioCtx||!musicOn)return;
+    const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+    const now=audioCtx.currentTime;
+    osc.type='sine';osc.frequency.value=notes[noteIndex++%notes.length];
+    gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.045,now+.12);
+    gain.gain.exponentialRampToValueAtTime(.0001,now+1.5);
+    osc.connect(gain);gain.connect(master);osc.start(now);osc.stop(now+1.6);
+  }
+  $('musicBtn').addEventListener('click',async()=>{
+    try{
+      if(!audioCtx){audioCtx=new (window.AudioContext||window.webkitAudioContext)();master=audioCtx.createGain();master.gain.value=.55;master.connect(audioCtx.destination)}
+      if(audioCtx.state==='suspended')await audioCtx.resume();
+      musicOn=!musicOn;
+      $('musicBtn').textContent=musicOn?'♫':'♪';
+      $('musicBtn').style.color=musicOn?'#F6D58A':'#EDE9FF';
+      $('musicBtn').setAttribute('aria-label',musicOn?'关闭背景音乐':'开启背景音乐');
+      if(musicOn){playNote();musicTimer=setInterval(playNote,620);showToast('星际旋律已开启')}
+      else{clearInterval(musicTimer);showToast('背景音乐已关闭')}
+    }catch(e){showToast('当前浏览器暂不支持音频播放')}
+  });
+
+  // If a visitor opens the page at/after midnight, celebrate once for that date.
+  const dateKey=new Date().toLocaleDateString();
+  try{
+    if(sessionStorage.getItem('celebrated-'+dateKey)!=='yes' && new Date().getMonth()===0 && new Date().getDate()===1 && new Date().getHours()===0 && new Date().getMinutes()<2){
+      document.body.classList.add('showtime','celebrating');startBlessingShow();sessionStorage.setItem('celebrated-'+dateKey,'yes');
+      launch(w*.5,h*.32,1.7);setTimeout(()=>launch(w*.25,h*.4,1.2),500);setTimeout(()=>launch(w*.75,h*.4,1.2),900);
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
